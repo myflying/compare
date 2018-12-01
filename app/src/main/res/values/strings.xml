@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">全球比价</string>
+
+    <string name="tab_home">首页</string>
+    <string name="tab_fight">趣图</string>
+    <string name="tab_show">广场</string>
+    <string name="tab_my">我的</string>
+
+</resources>
