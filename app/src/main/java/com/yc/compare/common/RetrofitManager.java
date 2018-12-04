@@ -2,7 +2,7 @@ package com.yc.compare.common;
 
 
 import com.yc.compare.common.interceptor.BasicParamsInterceptor;
-import com.google.gson.Gson;
+import com.yc.compare.common.interceptor.EncryptionInterceptor;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -24,7 +24,7 @@ public class RetrofitManager {
         initOkHttpClient();
         if (mRetrofit == null) {
             mRetrofit = new Retrofit.Builder()
-                    .baseUrl(Constants.HOT_DATA_URL)
+                    .baseUrl(Constants.BASE_URL)
                     .client(mOkHttpClient)
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
@@ -42,10 +42,13 @@ public class RetrofitManager {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
+        EncryptionInterceptor encryptionInterceptor = new EncryptionInterceptor();
+
         if (mOkHttpClient == null) {
             synchronized (RetrofitManager1.class) {
                 if (mOkHttpClient == null) {
                     mOkHttpClient = new OkHttpClient.Builder()
+                            .addInterceptor(encryptionInterceptor)
                             //.addInterceptor(basicParamsInterceptor)
                             .addInterceptor(logging)
                             .build();

@@ -1,135 +1,198 @@
 package com.yc.compare.ui;
 
-import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
-import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v4.content.ContextCompat;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+
+import com.alibaba.fastjson.JSONObject;
 import com.blankj.utilcode.util.ToastUtils;
 import com.orhanobut.logger.Logger;
+import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 import com.yc.compare.R;
-import com.yc.compare.bean.UserInfoBean;
+import com.yc.compare.bean.UserInfoRet;
 import com.yc.compare.presenter.UserPresenterImp;
+import com.yc.compare.ui.base.BaseFragmentActivity;
 import com.yc.compare.util.StringUtils;
 import com.yc.compare.view.UserView;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
-import permissions.dispatcher.NeedsPermission;
-import permissions.dispatcher.OnPermissionDenied;
-import permissions.dispatcher.PermissionRequest;
-import permissions.dispatcher.RuntimePermissions;
 
 /**
- * Created by admin on 2017/3/14.
+ * Created by myflying on 2018/12/4.
  */
+public class LoginActivity extends BaseFragmentActivity implements UserView {
 
-@RuntimePermissions
-public class LoginActivity extends AppCompatActivity implements UserView {
+    @BindView(R.id.et_user_name)
+    EditText userNameEditText;
 
-    public static final String MULTIPART_FORM_DATA = "multipart/form-data";
+    @BindView(R.id.et_user_pw)
+    EditText passWordEditText;
 
-    @BindView(R.id.username_edt)
-    EditText usernameEdt;
+    @BindView(R.id.tv_login_type)
+    TextView mLoginTypeTextView;
 
-    @BindView(R.id.password_edt)
-    EditText passwordEdt;
+    @BindView(R.id.tv_forget_pw)
+    TextView mForgetTextView;
 
-    @BindView(R.id.login_btn)
-    Button loginBtn;
+    @BindView(R.id.tv_register)
+    TextView mRegisterTextView;
 
-    @BindView(R.id.update_user_info_btn)
-    Button updateUserInfoBtn;
+    @BindView(R.id.btn_get_code)
+    Button mGetCodeButton;
 
-    @BindView(R.id.more_files_upload_btn)
-    Button moreFileUploadBtn;
-
-    @BindView(R.id.more_files_upload_type1_btn)
-    Button getMoreFileUploadBtn1;
+    @BindView(R.id.btn_login)
+    Button mLoginButton;
 
     private UserPresenterImp userPresenterImp;
 
     private ProgressDialog progressDialog = null;
 
+    private int loginType = 1;
+
+    private int seconds = 60;
+
+    private String validateNum;//随机验证码
+
+    private boolean isSendSms;//是否是发送验证码的请求
+
+    @SuppressLint("HandlerLeak")
+    private Handler handler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 1:
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+
+    @Override
+    protected int getContextViewId() {
+        return R.layout.activity_login;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        ButterKnife.bind(this);
-        initData();
-        //LoginActivityPermissionsDispatcher.showReadStorateWithCheck(this);
-        LoginActivityPermissionsDispatcher.showWriteStorateWithCheck(this);
+        initViews();
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        Logger.e("rquestCode--->"+requestCode);
-
-        LoginActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
-    }
-
-
-    @NeedsPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-    void showReadStorate() {
-        // NOTE: Perform action that requires the permission. If this is run by PermissionsDispatcher, the permission will have been granted
-        ToastUtils.showLong("showReadStorate");
-        Logger.e("showReadStorate");
-    }
-
-    @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    void showWriteStorate() {
-        // NOTE: Perform action that requires the permission. If this is run by PermissionsDispatcher, the permission will have been granted
-        ToastUtils.showLong("showWriteStorate");
-        Logger.e("showWriteStorate");
-    }
-
-    @OnPermissionDenied(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    void onStorageDenied() {
-        // NOTE: Show a rationale to explain why the permission is needed, e.g. with a dialog.
-        // Call proceed() or cancel() on the provided PermissionRequest to continue or abort
-        //showRationaleDialog(R.string.app_name, request);
-        ToastUtils.showLong("没有获取到权限");
-    }
-
-    public void initData() {
+    public void initViews() {
+        QMUIStatusBarHelper.setStatusBarLightMode(this);
         userPresenterImp = new UserPresenterImp(this, this);
-        progressDialog = new ProgressDialog(LoginActivity.this);
+        progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("正在登录");
+        userNameEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (StringUtils.isEmpty(charSequence.toString())) {
+                    mGetCodeButton.setBackgroundResource(R.drawable.send_pre_bg);
+                    mGetCodeButton.setTextColor(ContextCompat.getColor(LoginActivity.this, R.color.send_pre_color));
+                    mLoginButton.setBackgroundResource(R.mipmap.login_btn_pre);
+                } else {
+                    mGetCodeButton.setBackgroundResource(R.drawable.send_press_bg);
+                    mGetCodeButton.setTextColor(ContextCompat.getColor(LoginActivity.this, R.color.white));
+                    mLoginButton.setBackgroundResource(R.drawable.login_selector);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
 
-    @OnClick(R.id.login_btn)
-    public void login() {
+    /**
+     * 刷新验证码倒计时
+     */
+    private void smsButtonRefresh() {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                if (seconds-- <= 0) {
+                    mGetCodeButton.setEnabled(true);
+                    mGetCodeButton.setText("获取验证码");
+                    mGetCodeButton.setBackgroundResource(R.drawable.send_press_bg);
+                    mGetCodeButton.setTextColor(ContextCompat.getColor(LoginActivity.this, R.color.white));
+                    return;
+                }
+                mGetCodeButton.setEnabled(false);
+                mGetCodeButton.setText(seconds + "s");
+                mGetCodeButton.setBackgroundResource(R.drawable.send_pre_bg);
+                mGetCodeButton.setTextColor(ContextCompat.getColor(LoginActivity.this, R.color.send_pre_color));
+                handler.postDelayed(this, 1000);
+            }
+        };
+        handler.postDelayed(runnable, 0);
+    }
 
-        if (StringUtils.isEmpty(usernameEdt.getText())) {
-            ToastUtils.showLong("请输入用户名");
+    @OnClick(R.id.btn_get_code)
+    void sendCode() {
+        if (StringUtils.isEmpty(userNameEditText.getText())) {
+            ToastUtils.showLong(loginType == 1 ? "请输入账号" : "请输入手机号");
+            return;
+        }
+        isSendSms = true;
+        validateNum = String.valueOf((int) (Math.random() * (9999 - 1000 + 1)) + 1000);
+        userPresenterImp.sendSms(userNameEditText.getText().toString(), validateNum);
+    }
+
+    @OnClick(R.id.btn_login)
+    void login() {
+
+        if (StringUtils.isEmpty(userNameEditText.getText())) {
+            ToastUtils.showLong(loginType == 1 ? "请输入账号" : "请输入手机号");
             return;
         }
 
-        if (StringUtils.isEmpty(passwordEdt.getText())) {
-            ToastUtils.showLong("请输入密码");
+        if (StringUtils.isEmpty(passWordEditText.getText())) {
+            ToastUtils.showLong(loginType == 1 ? "请输入密码" : "请输入验证码");
             return;
         }
 
-        userPresenterImp.validateUserInfo(usernameEdt.getText().toString(), passwordEdt.getText().toString());
+        progressDialog.show();
+
+        userPresenterImp.userLogin(userNameEditText.getText().toString(), passWordEditText.getText().toString(), String.valueOf(loginType));
+    }
+
+    @OnClick(R.id.tv_login_type)
+    void changeType() {
+        if (mForgetTextView.getVisibility() == View.VISIBLE) {
+            loginType = 2;
+            mForgetTextView.setVisibility(View.GONE);
+            mGetCodeButton.setVisibility(View.VISIBLE);
+            passWordEditText.setHint(R.string.user_input_sms_code);
+        } else {
+            loginType = 1;
+            mForgetTextView.setVisibility(View.VISIBLE);
+            mGetCodeButton.setVisibility(View.GONE);
+            passWordEditText.setHint(R.string.user_input_password);
+        }
+    }
+
+    @OnClick(R.id.tv_register)
+    void register() {
+        Intent intent = new Intent(this, RegisterActivity.class);
+        intent.putExtra("page_type", 1);
+        startActivity(intent);
     }
 
     @Override
@@ -143,156 +206,21 @@ public class LoginActivity extends AppCompatActivity implements UserView {
     }
 
     @Override
-    public void loadDataSuccess(UserInfoBean tData) {
-
+    public void loadDataSuccess(UserInfoRet tData) {
+        Logger.i(JSONObject.toJSONString(tData));
+        progressDialog.dismiss();
+        if (isSendSms) {
+            ToastUtils.showLong("已发送");
+            isSendSms = false;
+            smsButtonRefresh();
+        }
     }
 
     @Override
     public void loadDataError(Throwable throwable) {
-
-    }
-
-    @NonNull
-    private RequestBody createPartFromString(String descriptionString) {
-        return RequestBody.create(
-                MediaType.parse(MULTIPART_FORM_DATA), descriptionString);
-    }
-
-    @NonNull
-    private MultipartBody.Part prepareFilePart(String partName, Uri fileUri) {
-        //File file = FileUtils.getFile(this, fileUri);
-        File file = new File(Environment.getExternalStorageDirectory().getPath()+"/u1.png");
-
-        // 为file建立RequestBody实例
-        RequestBody requestFile = RequestBody.create(MediaType.parse(MULTIPART_FORM_DATA), file);
-
-        // MultipartBody.Part借助文件名完成最终的上传
-        return MultipartBody.Part.createFormData(partName, file.getName(), requestFile);
-    }
-
-    @NonNull
-    private MultipartBody.Part prepareFilePart(String partName, File file) {
-
-        // 为file建立RequestBody实例
-        RequestBody requestFile = RequestBody.create(MediaType.parse(MULTIPART_FORM_DATA), file);
-
-        // MultipartBody.Part借助文件名完成最终的上传
-        return MultipartBody.Part.createFormData(partName, file.getName(), requestFile);
-    }
-
-    @NonNull
-    private Map<String,RequestBody> prepareFilePart(String partName, List<File> files) {
-
-        Map<String,RequestBody> maps = new HashMap<String,RequestBody>();
-        int i = 1;
-        for(File file:files){
-            // 为file建立RequestBody实例
-            RequestBody requestFile = RequestBody.create(MediaType.parse(MULTIPART_FORM_DATA), file);
-            maps.put("u"+i+".png",requestFile);
-            i++;
+        progressDialog.dismiss();
+        if (isSendSms) {
+            isSendSms = false;
         }
-
-        // MultipartBody.Part借助文件名完成最终的上传
-        return maps;
-    }
-
-
-    @OnClick(R.id.update_user_info_btn)
-    public void registerUserInfo() {
-
-        File file1 = new File(Environment.getExternalStorageDirectory().getPath()+"/u1.png");
-        File file2 = new File(Environment.getExternalStorageDirectory().getPath()+"/u2.png");
-
-        RequestBody description = createPartFromString("hello, this is description speaking");
-
-        MultipartBody.Part body1 = prepareFilePart("video1", file1);
-
-        MultipartBody.Part body2 = prepareFilePart("video2", file2);
-
-        //userPresenterImp.registerUserInfo(description,body1);
-
-        List<MultipartBody.Part> list = new ArrayList<MultipartBody.Part>();
-        list.add(body1);
-        list.add(body2);
-        userPresenterImp.saveMorePics(description,list);
-
-        /*MultipartBody.Builder builder = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM)//表单类型
-                .addFormDataPart("token", "abc123");
-        RequestBody imageBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-        builder.addFormDataPart("imgfile", file.getName(), imageBody);//imgfile 后台接收图片流的参数名
-
-        List<MultipartBody.Part> parts = builder.build().parts();
-        ApiUtil.uploadMemberIcon(parts).enqueue(new Callback<Result<String>>() {//返回结果
-            @Override
-            public void onResponse(Call<Result<String>> call, Response<Result<String>> response) {
-                //AppUtil.showToastInfo(LoginActivity.this, response.body().getMsg());
-                //Toasty.normal(LoginActivity.this,"11");
-                Logger.e("onResponse--->");
-            }
-
-            @Override
-            public void onFailure(Call<Result<String>> call, Throwable t) {
-                t.printStackTrace();
-                Logger.e("onFailure--->");
-            }
-        });*/
-
-    }
-
-
-    //方法有问题，待完善
-    @OnClick(R.id.more_files_upload_btn)
-    public void moreFilesUpload(){
-        File file1 = new File(Environment.getExternalStorageDirectory().getPath()+"/u1.png");
-        File file2 = new File(Environment.getExternalStorageDirectory().getPath()+"/u2.png");
-
-        RequestBody description = createPartFromString("hello, this is description speaking");
-
-        List<File> files = new ArrayList<File>();
-        files.add(file1);
-        files.add(file2);
-
-        Map<String,RequestBody> maps = prepareFilePart("file",files);
-        userPresenterImp.saveMoreFiles(description,maps);
-    }
-
-    @OnClick(R.id.more_files_upload_type1_btn)
-    public void saveMoreFilesType1(){
-        List<String> pathList = new ArrayList<String>();//此处是伪代码，获取多张待上传图片的地址列表
-        pathList.add(Environment.getExternalStorageDirectory().getPath()+"/u1.png");
-        pathList.add(Environment.getExternalStorageDirectory().getPath()+"/u2.png");
-
-        MultipartBody.Builder builder = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM)//表单类型
-                .addFormDataPart("love", "music");//自定义参数key常量类，即参数名
-        //多张图片
-        for (int i = 0; i < pathList.size(); i++) {
-            File file = new File(pathList.get(i));//filePath 图片地址
-            RequestBody imageBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-            builder.addFormDataPart("imgFile"+i, file.getName(), imageBody);//"imgFile"+i 后台接收图片流的参数名
-        }
-        RequestBody description = createPartFromString("hello, this is description speaking saveMoreFilesType1 ");
-        List<MultipartBody.Part> parts = builder.build().parts();
-        userPresenterImp.saveMorePics(description,parts);
-    }
-
-    private void showRationaleDialog(@StringRes int messageResId, final PermissionRequest request) {
-        new AlertDialog.Builder(this)
-                .setPositiveButton("允许", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(@NonNull DialogInterface dialog, int which) {
-                        request.proceed();
-                    }
-                })
-                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(@NonNull DialogInterface dialog, int which) {
-                        request.cancel();
-                    }
-                })
-                .setCancelable(false)
-                .setMessage(messageResId)
-                .show();
     }
 }

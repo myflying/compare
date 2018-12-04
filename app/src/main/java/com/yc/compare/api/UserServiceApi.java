@@ -1,9 +1,9 @@
 package com.yc.compare.api;
 
-import com.yc.compare.bean.UserInfoBean;
+import com.yc.compare.bean.UserInfoRet;
 
-import retrofit2.http.Field;
-import retrofit2.http.FormUrlEncoded;
+import okhttp3.RequestBody;
+import retrofit2.http.Body;
 import retrofit2.http.POST;
 import rx.Observable;
 
@@ -13,7 +13,13 @@ import rx.Observable;
 
 public interface UserServiceApi {
 
-    @FormUrlEncoded
-    @POST("validateUserInfo?")
-    Observable<UserInfoBean> validateUserInfo(@Field("name") String name, @Field("password") String password);
+    @POST("v1.user/login")
+    Observable<UserInfoRet> userLogin(@Body RequestBody requestBody);
+
+    @POST("v1.common/hotBrandList")
+    Observable<UserInfoRet> register(@Body RequestBody requestBody);
+
+    @POST("v1.common/hotBrandList")
+    Observable<UserInfoRet> sendSms(@Body RequestBody requestBody);
+
 }

@@ -8,11 +8,11 @@ import android.view.ViewGroup;
 import com.yc.compare.ui.fragment.CommitFragment;
 import com.yc.compare.ui.fragment.HomeFragment;
 import com.yc.compare.ui.fragment.MyFragment;
-import com.yc.compare.ui.fragment.PictureFragment;
+import com.yc.compare.ui.fragment.GoodTypeFragment;
 
 public class MyFragmentAdapter extends FragmentPagerAdapter {
 
-    private final Fragment[] FRAGMENTS = new Fragment[]{new HomeFragment(), new PictureFragment(), new CommitFragment(), new MyFragment()};
+    private final Fragment[] FRAGMENTS = new Fragment[]{new HomeFragment(), new GoodTypeFragment(), new CommitFragment(), new MyFragment()};
 
     public MyFragmentAdapter(FragmentManager fragmentManager) {
         super(fragmentManager);

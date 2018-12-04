@@ -1,23 +1,14 @@
 package com.yc.compare.presenter;
 
-import java.util.List;
-import java.util.Map;
-
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
-
 /**
  * Created by admin on 2017/3/13.
  */
 
 public interface UserPresenter {
-    void validateUserInfo(String name, String password);
 
-    void registerUserInfo(RequestBody body, MultipartBody.Part part);
+    void userLogin(String name, String password, String type);
 
-    void saveMorePics(RequestBody body, List<MultipartBody.Part> parts);
+    void register(String name, String password);
 
-    void saveMoreFiles(RequestBody body, Map<String, RequestBody> files);
-
-    void unSubscribe();
+    void sendSms(String name, String smsCode);
 }

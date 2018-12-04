@@ -34,9 +34,8 @@ public class EncryptionInterceptor implements Interceptor {
             byte[] strNewBody = RSAUtils.encryptByPublicKey(strOldBody, Constants.DEFAULT_PUBLIC_KEY);
             Logger.e("加密之后的参数--->" + new String(strNewBody,"UTF-8"));
 
-            byte[] res = RSAUtils.decryptByPrivateKey(strNewBody,Constants.DEFAULT_PRIVATE_KEY);
-
-            Logger.e("加密之后再解密的参数--->" + new String(res,"UTF-8"));
+            //byte[] res = RSAUtils.decryptByPrivateKey(strNewBody,Constants.DEFAULT_PRIVATE_KEY);
+            //Logger.e("加密之后再解密的参数--->" + new String(res,"UTF-8"));
 
             RequestBody body = RequestBody.create(mediaType, Base64Utils.encode(strNewBody));
             request = request.newBuilder().header("Content-Type", body.contentType().toString()).header("Content-Length", String.valueOf(body.contentLength())).method(request.method(), body).build();
