@@ -4,6 +4,8 @@
     <color name="colorPrimaryDark">#ff7990</color>
     <color name="colorAccent">#FF4081</color>
 
+    <color name="transparent">#00000000</color>
+
     <color name="white">#FFFFFFFF</color>
 
     <color name="tab_text_selected">#fb5161</color>
@@ -44,4 +46,12 @@
     <color name="send_pre_color">#a8a7a0</color>
 
     <color name="top_title_color">#3f3e37</color>
+
+    <color name="category_content_color">#686865</color>
+
+    <color name="good_search_bg_color">#7f8a8a8a</color>
+
+    <color name="follow_txt_color">#3f4038</color>
+
+    <color name="params_txt_color">#2f2f2c</color>
 </resources>

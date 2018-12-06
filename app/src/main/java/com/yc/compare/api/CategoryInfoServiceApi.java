@@ -1,6 +1,6 @@
 package com.yc.compare.api;
 
-import com.yc.compare.bean.CategoryInfoRet;
+import com.yc.compare.bean.CategoryWrapperRet;
 
 import okhttp3.RequestBody;
 import retrofit2.http.Body;
@@ -12,6 +12,9 @@ import rx.Observable;
  */
 public interface CategoryInfoServiceApi {
 
-    @POST("getCategoryInfoByType")
-    Observable<CategoryInfoRet> getCategoryInfoList(@Body RequestBody requestBody);
+    @POST("v1.goods/navigation1")
+    Observable<CategoryWrapperRet> getCategoryInfoList(@Body RequestBody requestBody);
+
+    @POST("v1.goods/navigation2")
+    Observable<CategoryWrapperRet> getCategoryWrapperList(@Body RequestBody requestBody);
 }

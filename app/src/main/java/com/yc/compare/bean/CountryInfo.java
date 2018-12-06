@@ -12,6 +12,8 @@ public class CountryInfo {
     @SerializedName("logo")
     private String countryImage;
 
+    private String firstLetter;
+
     public String getId() {
         return id;
     }
@@ -34,5 +36,13 @@ public class CountryInfo {
 
     public void setCountryImage(String countryImage) {
         this.countryImage = countryImage;
+    }
+
+    public String getFirstLetter() {
+        return firstLetter;
+    }
+
+    public void setFirstLetter(String firstLetter) {
+        this.firstLetter = firstLetter;
     }
 }

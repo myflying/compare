@@ -107,6 +107,7 @@ public abstract class BaseFragment extends Fragment {
             mBaseView = view;
         }
         QMUIViewHelper.requestApplyInsets(getActivity().getWindow());
+        mBaseView = view;
         return mBaseView;
     }
 

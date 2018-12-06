@@ -1,5 +1,7 @@
 package com.yc.compare.bean;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by myflying on 2018/12/3.
  * 分类信息实体类
@@ -14,7 +16,7 @@ public class CategoryInfo {
     /**
      * 分类类型
      */
-    private String type;
+    private int type;
 
     /**
      * 分类等级
@@ -24,7 +26,10 @@ public class CategoryInfo {
     /**
      * 分类图标
      */
+    @SerializedName("img")
     private String typeImage;
+
+    private boolean isSelected;
 
     public String getId() {
         return id;
@@ -42,11 +47,11 @@ public class CategoryInfo {
         this.name = name;
     }
 
-    public String getType() {
+    public int getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(int type) {
         this.type = type;
     }
 
@@ -64,5 +69,13 @@ public class CategoryInfo {
 
     public void setTypeImage(String typeImage) {
         this.typeImage = typeImage;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 }
