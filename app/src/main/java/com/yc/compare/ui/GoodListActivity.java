@@ -29,6 +29,7 @@ import com.yc.compare.R;
 import com.yc.compare.base.IBaseView;
 import com.yc.compare.bean.BrandInfo;
 import com.yc.compare.bean.CategoryWrapperRet;
+import com.yc.compare.bean.Condition;
 import com.yc.compare.bean.CountryWrapper;
 import com.yc.compare.bean.GoodInfoRet;
 import com.yc.compare.presenter.CategoryWrapperPresenterImp;
@@ -87,6 +88,8 @@ public class GoodListActivity extends BaseFragmentActivity implements IBaseView 
 
     private int currentPage = 1;
 
+    private Condition condition;
+
     @Override
     protected int getContextViewId() {
         return R.layout.activity_good_list;
@@ -99,6 +102,8 @@ public class GoodListActivity extends BaseFragmentActivity implements IBaseView 
     }
 
     public void initViews() {
+        condition = new Condition();
+
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ScreenUtils.getScreenWidth() - SizeUtils.dp2px(30), SizeUtils.dp2px(30));
         params.setMargins(SizeUtils.dp2px(10), BarUtils.getStatusBarHeight(), 0, 0);
         mSearchLayout.setLayoutParams(params);
@@ -118,13 +123,16 @@ public class GoodListActivity extends BaseFragmentActivity implements IBaseView 
 
         avi.show();
 
-        goodInfoPresenterImp.getGoodInfoByType(currentPage, "");
+        condition.setPage(currentPage+"");
+
+        goodInfoPresenterImp.getGoodInfoByParams(condition);
 
         goodInfoAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
             @Override
             public void onLoadMoreRequested() {
                 currentPage++;
-                goodInfoPresenterImp.getGoodInfoByType(currentPage, "");
+                condition.setPage(currentPage+"");
+                goodInfoPresenterImp.getGoodInfoByParams(condition);
             }
         }, mGoodListView);
 

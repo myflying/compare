@@ -19,7 +19,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.GoodDetailActivity">
+        <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,7 +27,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.yc.compare.ui.MainActivity"
+            android:name="com.yc.compare.ui.GoodListActivity"
             android:theme="@style/AppTheme.Main"
             android:label="@string/app_name">
         </activity>
@@ -35,7 +35,7 @@
         <activity android:name=".ui.HotCountryActivity"></activity>
         <activity android:name=".ui.LoginActivity"></activity>
         <activity android:name=".ui.RegisterActivity"></activity>
-        <activity android:name=".ui.GoodListActivity"></activity>
+        <activity android:name=".ui.OtherPriceActivity"></activity>
     </application>
 
 </manifest>

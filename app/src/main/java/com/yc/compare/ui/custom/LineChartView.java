@@ -56,20 +56,20 @@ public class LineChartView extends View {
     private float heightPercent = 0.618f;
 
     private int lineColor = Color.parseColor("#fe3858");//曲线颜色
-    private float lineWidthDP = 2f;//曲线宽度dp
+    private float lineWidthDP = 1f;//曲线宽度dp
 
     private int pointColor = Color.parseColor("#fe3858");//锚点颜色
-    private float pointWidthDefault = 8f;
+    private float pointWidthDefault = 4f;
     private float pointWidthDP = pointWidthDefault;//锚点宽度dp
 
-    private int tableColor = Color.parseColor("#d1d1d1");//表格线颜色
+    private int tableColor = Color.parseColor("#e1e1e1");//表格线颜色
     private float tableWidthDP = 0.5f;//表格线宽度dp
 
-    private int rulerTextColor = tableColor;//表格标尺文本颜色
-    private float rulerTextSizeSP = 10f;//表格标尺文本大小
+    private int rulerTextColor = Color.parseColor("#656464");//表格标尺文本颜色
+    private float rulerTextSizeSP = 13f;//表格标尺文本大小
 
     private int pointTextColor = Color.parseColor("#2e2e2b");//锚点文本颜色
-    private float pointTextSizeSP = 10f;//锚点文本大小
+    private float pointTextSizeSP = 13f;//锚点文本大小
 
     private boolean isShowTable = false;
     private boolean isBezierLine = false;

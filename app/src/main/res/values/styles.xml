@@ -40,5 +40,6 @@
 
     <style name="AppTheme.Main" parent="AppTheme1" />
 
-
+    <style name="TranslucentTheme" parent="AppTheme">
+    </style>
 </resources>

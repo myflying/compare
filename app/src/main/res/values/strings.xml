@@ -25,4 +25,8 @@
 
     <string name="register_user_txt">新用户注册</string>
     <string name="forget_pw_txt">忘记密码</string>
+
+    <string name="good_detail_txt">商品详情</string>
+    <string name="product_rec_txt">产品推荐</string>
+    <string name="end_list_txt">到底啦</string>
 </resources>

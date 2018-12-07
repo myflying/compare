@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.yc.compare.base.BasePresenterImp;
 import com.yc.compare.base.IBaseView;
+import com.yc.compare.bean.Condition;
 import com.yc.compare.bean.GoodInfoRet;
 import com.yc.compare.model.GoodInfoModelImp;
 
@@ -27,5 +28,10 @@ public class GoodInfoPresenterImp extends BasePresenterImp<IBaseView, GoodInfoRe
     @Override
     public void getGoodInfoByType(int page, String cid) {
         goodInfoModelImp.getGoodInfoByType(page, cid, this);
+    }
+
+    @Override
+    public void getGoodInfoByParams(Condition condition) {
+        goodInfoModelImp.getGoodInfoByParams(condition, this);
     }
 }

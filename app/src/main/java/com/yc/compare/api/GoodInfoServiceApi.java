@@ -14,4 +14,7 @@ public interface GoodInfoServiceApi {
 
     @POST("v1.home/index")
     Observable<GoodInfoRet> getGoodInfoByType(@Body RequestBody requestBody);
+
+    @POST("v1.goods/goodsList")
+    Observable<GoodInfoRet> getGoodInfoByParams(@Body RequestBody requestBody);
 }
