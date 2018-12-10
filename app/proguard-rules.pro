@@ -36,3 +36,4 @@
 -dontwarn com.blankj.utilcode.**
 -keep class com.wang.avi.** { *; }
 -keep class com.wang.avi.indicators.** { *; }
+-dontwarn com.bumptech.glide.**

@@ -36,6 +36,9 @@
         <activity android:name=".ui.LoginActivity"></activity>
         <activity android:name=".ui.RegisterActivity"></activity>
         <activity android:name=".ui.OtherPriceActivity"></activity>
+        <activity android:name=".ui.SuggestActivity"></activity>
+        <activity android:name=".ui.UserInfoActivity"></activity>
+        <activity android:name=".ui.AboutActivity"></activity>
     </application>
 
 </manifest>

@@ -15,6 +15,8 @@
 
     <color name="main_bg_color">#f2f2f2</color>
 
+    <color name="border_line_color">#f6f6f6</color>
+
     <color name="tab_indicator">#d6d6d6</color>
     <color name="tab_tv_normal">#999999</color>
     <color name="tab_tv_selected">#333333</color>
@@ -60,4 +62,8 @@
     <color name="share_text_color">#4d4d4d</color>
 
     <color name="price_txt_color">#666460</color>
+
+    <color name="my_info_txt_color">#403f38</color>
+
+    <color name="my_info_nickname_color">#9c9698</color>
 </resources>

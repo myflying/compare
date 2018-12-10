@@ -78,10 +78,10 @@ public class GoodTypeFragment extends BaseFragment implements CategoryWrapperVie
         return root;
     }
 
-    @Override
-    protected boolean translucentFull() {
-        return true;
-    }
+//    @Override
+//    protected boolean translucentFull() {
+//        return true;
+//    }
 
     public void initViews() {
 

@@ -11,10 +11,11 @@ import java.util.List;
 public class SubFragmentAdapter extends FragmentPagerAdapter {
 
     private List<Fragment> fragments;
-
-    public SubFragmentAdapter(FragmentManager fragmentManager, List<Fragment> listFragments) {
+    private List<String> titles;
+    public SubFragmentAdapter(FragmentManager fragmentManager, List<Fragment> listFragments,List<String> titles) {
         super(fragmentManager);
         this.fragments = listFragments;
+        this.titles = titles;
     }
 
     /**
@@ -39,4 +40,11 @@ public class SubFragmentAdapter extends FragmentPagerAdapter {
     public void destroyItem(ViewGroup container, int position, Object object) {
         //super.destroyItem(container, position, object);
     }
+
+    //重写这个方法，将设置每个Tab的标题
+    @Override
+    public CharSequence getPageTitle(int position) {
+        return titles.get(position);
+    }
+
 }

@@ -122,8 +122,6 @@ public class HomeFragment extends BaseFragment implements HomeDataView {
         for (int i = 0; i < 6; i++) {
             fragments.add(MainAllFragment.newInstance(i));
         }
-        SubFragmentAdapter viewPageAdapter = new SubFragmentAdapter(getChildFragmentManager(), fragments);
-        mViewPager.setAdapter(viewPageAdapter);
 
         mTitleDataList = new ArrayList<>();
         mTitleDataList.add("全部");
@@ -132,6 +130,11 @@ public class HomeFragment extends BaseFragment implements HomeDataView {
         mTitleDataList.add("包包");
         mTitleDataList.add("手表");
         mTitleDataList.add("项链");
+
+        SubFragmentAdapter viewPageAdapter = new SubFragmentAdapter(getChildFragmentManager(), fragments,mTitleDataList);
+        mViewPager.setAdapter(viewPageAdapter);
+
+
 
         CommonNavigator commonNavigator = new CommonNavigator(getActivity());
         commonNavigator.setAdapter(new CommonNavigatorAdapter() {

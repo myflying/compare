@@ -14,4 +14,5 @@ public interface UserModel<T> {
     void register(String name, String password, IBaseRequestCallBack<T> iBaseRequestCallBack);
 
     void sendSms(String name, String smsCode, IBaseRequestCallBack<T> iBaseRequestCallBack);
+
 }

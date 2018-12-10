@@ -13,11 +13,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethod;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.FrameLayout;
 
 import com.yc.compare.R;
-import com.qmuiteam.qmui.util.QMUIViewHelper;
-import com.qmuiteam.qmui.widget.QMUIWindowInsetLayout;
 
 
 /**
@@ -93,20 +90,20 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = onCreateView();
-        if (translucentFull()) {
-            if (view instanceof QMUIWindowInsetLayout) {
-                view.setFitsSystemWindows(false);
-                mBaseView = view;
-            } else {
-                mBaseView = new QMUIWindowInsetLayout(getActivity());
-                ((QMUIWindowInsetLayout) mBaseView).addView(view, new FrameLayout.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-            }
-        } else {
-            view.setFitsSystemWindows(true);
-            mBaseView = view;
-        }
-        QMUIViewHelper.requestApplyInsets(getActivity().getWindow());
+//        if (translucentFull()) {
+//            if (view instanceof QMUIWindowInsetLayout) {
+//                view.setFitsSystemWindows(false);
+//                mBaseView = view;
+//            } else {
+//                mBaseView = new QMUIWindowInsetLayout(getActivity());
+//                ((QMUIWindowInsetLayout) mBaseView).addView(view, new FrameLayout.LayoutParams(
+//                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+//            }
+//        } else {
+//            view.setFitsSystemWindows(true);
+//            mBaseView = view;
+//        }
+//        QMUIViewHelper.requestApplyInsets(getActivity().getWindow());
         mBaseView = view;
         return mBaseView;
     }

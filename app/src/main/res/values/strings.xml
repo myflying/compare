@@ -29,4 +29,11 @@
     <string name="good_detail_txt">商品详情</string>
     <string name="product_rec_txt">产品推荐</string>
     <string name="end_list_txt">到底啦</string>
+
+    <string name="permission_storage_never_ask_again">不再询问</string>
+    <string name="permission_storage_rationale">必须要开启存储权限，才能正常使用，请开启</string>
+    <string name="permission_storage_denied">禁止了存储权限，开启权限才能正常使用</string>
+
+    <string name="button_allow">开启</string>
+    <string name="button_deny">拒绝</string>
 </resources>

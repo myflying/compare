@@ -22,4 +22,7 @@ public interface UserServiceApi {
     @POST("v1.common/hotBrandList")
     Observable<UserInfoRet> sendSms(@Body RequestBody requestBody);
 
+    @POST("addSuggest")
+    Observable<UserInfoRet> addSuggest(@Body RequestBody requestBody);
+
 }
