@@ -5,9 +5,11 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
@@ -15,11 +17,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.blankj.utilcode.util.RegexUtils;
+import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.orhanobut.logger.Logger;
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 import com.yc.compare.R;
 import com.yc.compare.bean.UserInfoRet;
+import com.yc.compare.common.Constants;
 import com.yc.compare.presenter.UserPresenterImp;
 import com.yc.compare.ui.base.BaseFragmentActivity;
 import com.yc.compare.util.StringUtils;
@@ -27,11 +32,15 @@ import com.yc.compare.view.UserView;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import cn.smssdk.EventHandler;
+import cn.smssdk.SMSSDK;
 
 /**
  * Created by myflying on 2018/12/4.
  */
 public class LoginActivity extends BaseFragmentActivity implements UserView {
+
+    public static String COUNTRY_CODE = "86";
 
     @BindView(R.id.et_user_name)
     EditText userNameEditText;
@@ -58,13 +67,17 @@ public class LoginActivity extends BaseFragmentActivity implements UserView {
 
     private ProgressDialog progressDialog = null;
 
-    private int loginType = 1;
+    private int loginType = 1; //账号密码登录,2手机号登录
+
+    private EventHandler eventHandler;
 
     private int seconds = 60;
 
     private String validateNum;//随机验证码
 
     private boolean isSendSms;//是否是发送验证码的请求
+
+    Runnable runnable;
 
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {
@@ -118,13 +131,72 @@ public class LoginActivity extends BaseFragmentActivity implements UserView {
 
             }
         });
+
+        //初始时设置按钮可以点击
+        mGetCodeButton.setEnabled(true);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        eventHandler = new EventHandler() {
+            public void afterEvent(int event, int result, Object data) {
+                // afterEvent会在子线程被调用，因此如果后续有UI相关操作，需要将数据发送到UI线程
+                Message msg = new Message();
+                msg.arg1 = event;
+                msg.arg2 = result;
+                msg.obj = data;
+                new Handler(Looper.getMainLooper(), new Handler.Callback() {
+                    @Override
+                    public boolean handleMessage(Message msg) {
+                        int event = msg.arg1;
+                        int result = msg.arg2;
+                        Object data = msg.obj;
+                        if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
+                            if (result == SMSSDK.RESULT_COMPLETE) {
+                                smsButtonRefresh();
+                                Logger.i("send code success--->");
+                                // TODO 处理成功得到验证码的结果
+                                // 请注意，此时只是完成了发送验证码的请求，验证码短信还需要几秒钟之后才送达
+                            } else {
+                                ToastUtils.showLong("验证码发送失败，请重试");
+                                Logger.i("send code fail--->");
+                                // TODO 处理错误的结果
+                                ((Throwable) data).printStackTrace();
+                            }
+                        } else if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
+                            if (result == SMSSDK.RESULT_COMPLETE) {
+                                Logger.i("validate code success--->");
+                                // TODO 处理验证码验证通过的结果
+
+                                userPresenterImp.userLogin(userNameEditText.getText().toString(), passWordEditText.getText().toString(), String.valueOf(loginType));
+                            } else {
+                                Logger.i("validate code fail--->");
+                                if (progressDialog != null && progressDialog.isShowing()) {
+                                    progressDialog.dismiss();
+                                }
+                                ToastUtils.showLong("短信验证码错误，请重试");
+                                // TODO 处理错误的结果
+                                ((Throwable) data).printStackTrace();
+                            }
+                        }
+                        // TODO 其他接口的返回结果也类似，根据event判断当前数据属于哪个接口
+                        return false;
+                    }
+                }).sendMessage(msg);
+            }
+        };
+
+        // 注册一个事件回调，用于处理SMSSDK接口请求的结果
+        SMSSDK.registerEventHandler(eventHandler);
     }
 
     /**
      * 刷新验证码倒计时
      */
     private void smsButtonRefresh() {
-        Runnable runnable = new Runnable() {
+        runnable = new Runnable() {
             @Override
             public void run() {
                 if (seconds-- <= 0) {
@@ -147,12 +219,17 @@ public class LoginActivity extends BaseFragmentActivity implements UserView {
     @OnClick(R.id.btn_get_code)
     void sendCode() {
         if (StringUtils.isEmpty(userNameEditText.getText())) {
-            ToastUtils.showLong(loginType == 1 ? "请输入账号" : "请输入手机号");
+            ToastUtils.showLong("请输入手机号");
             return;
         }
+
+        if (!RegexUtils.isMobileExact(userNameEditText.getText().toString())) {
+            ToastUtils.showLong("请输入有效的手机号");
+            return;
+        }
+
+        SMSSDK.getVerificationCode(COUNTRY_CODE, userNameEditText.getText().toString());
         isSendSms = true;
-        validateNum = String.valueOf((int) (Math.random() * (9999 - 1000 + 1)) + 1000);
-        userPresenterImp.sendSms(userNameEditText.getText().toString(), validateNum);
     }
 
     @OnClick(R.id.btn_login)
@@ -169,8 +246,11 @@ public class LoginActivity extends BaseFragmentActivity implements UserView {
         }
 
         progressDialog.show();
-
-        userPresenterImp.userLogin(userNameEditText.getText().toString(), passWordEditText.getText().toString(), String.valueOf(loginType));
+        if (loginType == 1) {
+            userPresenterImp.userLogin(userNameEditText.getText().toString(), passWordEditText.getText().toString(), String.valueOf(loginType));
+        } else {
+            SMSSDK.submitVerificationCode(COUNTRY_CODE, userNameEditText.getText().toString(), passWordEditText.getText().toString());
+        }
     }
 
     @OnClick(R.id.tv_login_type)
@@ -180,11 +260,13 @@ public class LoginActivity extends BaseFragmentActivity implements UserView {
             mForgetTextView.setVisibility(View.GONE);
             mGetCodeButton.setVisibility(View.VISIBLE);
             passWordEditText.setHint(R.string.user_input_sms_code);
+            passWordEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
         } else {
             loginType = 1;
             mForgetTextView.setVisibility(View.VISIBLE);
             mGetCodeButton.setVisibility(View.GONE);
             passWordEditText.setHint(R.string.user_input_password);
+            passWordEditText.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
         }
     }
 
@@ -208,11 +290,22 @@ public class LoginActivity extends BaseFragmentActivity implements UserView {
     @Override
     public void loadDataSuccess(UserInfoRet tData) {
         Logger.i(JSONObject.toJSONString(tData));
-        progressDialog.dismiss();
-        if (isSendSms) {
-            ToastUtils.showLong("已发送");
-            isSendSms = false;
-            smsButtonRefresh();
+
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+
+        if (tData != null) {
+            if (tData.getCode() == Constants.SUCCESS && tData.getData() != null) {
+                ToastUtils.showLong("登录成功");
+                SPUtils.getInstance().put(Constants.USER_INFO, JSONObject.toJSONString(tData.getData()));
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+            }
+
+            if (tData.getCode() == Constants.FAIL) {
+                ToastUtils.showLong(StringUtils.isEmpty(tData.getMsg()) ? "登录失败" : tData.getMsg());
+            }
         }
     }
 
@@ -222,5 +315,23 @@ public class LoginActivity extends BaseFragmentActivity implements UserView {
         if (isSendSms) {
             isSendSms = false;
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (eventHandler != null) {
+            SMSSDK.unregisterEventHandler(eventHandler);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (handler != null && runnable != null) {
+            seconds = 0;
+            handler.removeCallbacks(runnable);
+            handler = null;
+        }
+        super.onDestroy();
     }
 }

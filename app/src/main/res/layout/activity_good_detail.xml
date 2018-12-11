@@ -472,7 +472,6 @@
                         android:background="@color/line_color"></View>
                 </RelativeLayout>
             </LinearLayout>
-
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 </android.support.design.widget.CoordinatorLayout>

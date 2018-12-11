@@ -9,6 +9,8 @@ public class Constants {
 
     public static final int FAIL = 0;
 
+    public static final int OTHER_CODE = -1;
+
     public static final String DEFAULT_PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt++fDbNPGLrLOh/owIjR" +
             "Cp3aYvHoFOf8PcPlD/e+yGnqbdI7dKHEvJpae8GCIqB7syBoWSNnTLyhtCm3HZW6" +
             "MVeO1j+vfsumoFcJOPOMrARZ3BkE4d8XQu02RZNg9g1TJHUI6WIAwLd1Pe4z7UGs" +
@@ -16,6 +18,8 @@ public class Constants {
             "MZtoa1Edg/R1W4QxUqZO8DZhOGb6T0xayTw/fAg3+s3P5rzASuD12C6OuEEb39oU" +
             "SvvUp6G0zhFkiYf0f6f5aseqnFW7ZShAhdYNSVi+5eIoNxSq5bnTrz2DO5F6enql" +
             "IQIDAQAB";
+
+    public static final String USER_INFO = "user_info";
 
     public static final String DEFAULT_PRIVATE_KEY = "IN SERVER";
 

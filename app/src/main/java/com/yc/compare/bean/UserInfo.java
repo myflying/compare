@@ -8,6 +8,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class UserInfo {
 
+    @SerializedName("uid")
     private String userId;
 
     private String mobile;

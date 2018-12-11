@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="104dp"
+    android:gravity="center"
+    android:background="@color/white"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="80dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="文章的标题文章的标题文章的标题文章的标题文章的标题"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:textColor="@color/top_type_text_color"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2018-12-01"
+                android:layout_marginLeft="8dp"
+                android:textColor="@color/good_search_bg_color"
+                android:textSize="14sp"></TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="256阅读"
+                android:layout_marginLeft="20dp"
+                android:textColor="@color/good_search_bg_color"
+                android:textSize="14sp"></TextView>
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="128dp"
+        android:layout_height="80dp"
+        android:layout_marginRight="12dp"
+        android:src="@mipmap/news_def_img" />
+</LinearLayout>

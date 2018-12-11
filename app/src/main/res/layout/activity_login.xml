@@ -66,6 +66,8 @@
             android:background="@null"
             android:hint="@string/user_input_name"
             android:paddingLeft="4dp"
+            android:inputType="phone"
+            android:maxLines="11"
             android:textColor="@color/black"
             android:textSize="16sp" />
 

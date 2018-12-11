@@ -16,7 +16,7 @@ public interface UserServiceApi {
     @POST("v1.user/login")
     Observable<UserInfoRet> userLogin(@Body RequestBody requestBody);
 
-    @POST("v1.common/hotBrandList")
+    @POST("v1.user/register")
     Observable<UserInfoRet> register(@Body RequestBody requestBody);
 
     @POST("v1.common/hotBrandList")

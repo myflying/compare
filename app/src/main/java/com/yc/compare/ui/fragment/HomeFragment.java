@@ -134,8 +134,6 @@ public class HomeFragment extends BaseFragment implements HomeDataView {
         SubFragmentAdapter viewPageAdapter = new SubFragmentAdapter(getChildFragmentManager(), fragments,mTitleDataList);
         mViewPager.setAdapter(viewPageAdapter);
 
-
-
         CommonNavigator commonNavigator = new CommonNavigator(getActivity());
         commonNavigator.setAdapter(new CommonNavigatorAdapter() {
 

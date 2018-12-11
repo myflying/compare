@@ -66,4 +66,6 @@
     <color name="my_info_txt_color">#403f38</color>
 
     <color name="my_info_nickname_color">#9c9698</color>
+
+    <color name="news_other_color">#a8a8a8</color>
 </resources>

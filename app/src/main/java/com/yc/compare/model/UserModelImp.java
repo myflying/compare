@@ -86,7 +86,7 @@ public class UserModelImp extends BaseModel implements UserModel<UserInfoRet> {
     public void register(String name, String password, final IBaseRequestCallBack<UserInfoRet> iBaseRequestCallBack) {
         JSONObject params = new JSONObject();
         try {
-            params.put("name", name);
+            params.put("mobile", name);
             params.put("password", password);
         } catch (JSONException e) {
             e.printStackTrace();

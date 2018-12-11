@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.mob.sdk'
 
 android {
     compileSdkVersion 28
@@ -13,9 +14,31 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+            signingConfig signingConfigs.debug
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+
+        }
+    }
+    signingConfigs {
+        debug {
+            storeFile file('compare.jks')
+            storePassword "123456"
+            keyAlias "compare"
+            keyPassword "123456"
+        }
+    }
+}
+
+MobSDK {
+    appKey "29379d5c17210"
+    appSecret "a4c92be4791465a1ab1dc4919493cdf2"
+    SMSSDK {}
 }
 
 dependencies {
